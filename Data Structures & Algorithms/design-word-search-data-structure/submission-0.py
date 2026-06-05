@@ -1,0 +1,37 @@
+class Node:
+    def __init__(self):
+        self.children = {}
+        self.word = False
+
+class WordDictionary:
+
+    def __init__(self):
+        self.start = Node()
+
+    def addWord(self, word: str) -> None:
+        curr = self.start
+
+        for char in word:
+            if char not in curr.children:
+                curr.children[char] = Node()
+            curr = curr.children[char]
+        curr.word = True
+
+    def search(self, word: str) -> bool:
+        
+        def dfs(j, root):
+            curr = root
+
+            for i in range(j, len(word)):
+                char = word[i]
+                if char == ".":
+                    for child in curr.children.values():
+                        if dfs(i + 1, child):
+                            return True
+                    return False
+                else:
+                    if char not in curr.children:
+                        return False
+                    curr = curr.children[char]
+            return curr.word
+        return dfs(0, self.start)
